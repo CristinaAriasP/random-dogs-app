@@ -1,35 +1,52 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { DogCard } from './components/DogCard.tsx'
+
+interface Dog {
+  imgUrl: string;
+  likes: number;
+  dislikes: number;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [counter, setCounter] = useState(0);
+  const [dogList, setDogList] = useState<Dog[]>([
+    {
+      imgUrl: 'https://images.pexels.com/photos/2253275/pexels-photo-2253275.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      likes: 0,
+      dislikes: 0,
+    },
+  ]);
+
+  console.log(setDogList)
+
+  const handleClick  = () => {
+    console.log('Botón clickado');
+    setDogList([...dogList,  
+      {
+      imgUrl: 'https://images.pexels.com/photos/2253275/pexels-photo-2253275.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      likes: 0,
+      dislikes: 0,
+    }
+  ]);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Votalperrico 🐶</h1>
+
+      <button id="add-1-perrico" onClick={(handleClick)}>Añadir 1 perrico al final</button>
+      <button id="add-1-perrico-start">Añadir 1 perrico al principio</button>
+      <button id="add-5-perricos">Añadir 5 perricos más</button>
+      <div className="filters">
+        <span> Filter by: </span>
+        <button id="like-filter">Preciosisimos ❤️</button>
+        <button id="dislike-filter">Feísimos 🤮</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      <DogCard dogList={dogList} />
     </>
-  )
+  );
 }
 
 export default App
