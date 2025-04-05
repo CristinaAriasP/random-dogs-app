@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { DogCard } from './components/DogCard.tsx'
+import { getRandomDogImage } from './services/add-dog.service.ts'
 
 interface Dog {
   imgUrl: string;
@@ -20,15 +21,18 @@ function App() {
 
   console.log(setDogList)
 
-  const handleClick  = () => {
+  const handleClick  = async () => {
     console.log('Botón clickado');
+    const dog = await getRandomDogImage('');
+   if (dog)  {
     setDogList([...dogList,  
       {
-      imgUrl: 'https://images.pexels.com/photos/2253275/pexels-photo-2253275.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      likes: 0,
-      dislikes: 0,
+      imgUrl: dog?.imgUrl,
+      likes: dog.likeCount,
+      dislikes: dog.dislikeCount,
     }
-  ]);
+    ]);
+   }
   };
 
   return (
