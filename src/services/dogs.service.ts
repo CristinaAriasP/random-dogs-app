@@ -16,7 +16,7 @@ function getRandomInt(min: number, max: number) {
         throw new Error(`Response status: ${response.status}`);
       }
   
-      const json = await response.json();
+      const json: {message: string; status: string} = await response.json();
   
       // TODO random breed
       return {
@@ -31,4 +31,22 @@ function getRandomInt(min: number, max: number) {
     }
 
     return undefined;
+  }
+
+  export async function getBreeds(): Promise<string[] | undefined> {
+    const url = 'https://dog.ceo/api/breeds/list/all';
+  
+    try {
+      const response = await fetch(url);
+  
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+  
+      const json = (await response.json());
+  
+      return  Object.keys(json.message);
+    } catch (error: any) {
+      console.error(error.message);
+    }
   }
