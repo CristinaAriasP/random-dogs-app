@@ -1,9 +1,9 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import './App.css'
 import { DogCard } from './components/DogCard.tsx'
-import { getRandomDogImage } from './services/dogs.service.ts'
+import { getBreeds, getRandomDogImage } from './services/dogs.service.ts'
 
-interface Dog {
+export interface Dog {
   imgUrl: string;
   likes: number;
   dislikes: number;
@@ -11,8 +11,9 @@ interface Dog {
 
 function App() {
   // const [counter, setCounter] = useState(0);
-  const [allBreeds, setAllBreeds] = useState('');
   const [breed, setBreed] = useState('');
+  const [name, setName] = useState('');
+  const [allBreeds, setAllBreeds] = useState<string[]>([]);
   const [dogList, setDogList] = useState<Dog[]>([
     {
       imgUrl: 'https://images.pexels.com/photos/2253275/pexels-photo-2253275.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
@@ -21,11 +22,21 @@ function App() {
     },
   ]);
 
+  useEffect(() => {
+    const fetchAllBreeds = async () => {
+      const breeds = await getBreeds();
+      if (breeds) {
+        setAllBreeds(breeds);
+      }
+    };
+    fetchAllBreeds();
+  }, []);
+
   console.log(setDogList)
 
   const handleAddDogClick  = async () => {
     console.log('Botón clickado');
-    const dog = await getRandomDogImage('');
+    const dog = await getRandomDogImage(breed);
    if (dog)  {
     setDogList([...dogList,  
       {
@@ -41,19 +52,23 @@ function App() {
     setBreed(event.target.value);
   };
 
+const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+  setName(event.target.value)
+}
+
   return (
     <>
       <h1>Votalperrico 🐶</h1>
       <div>
-        Selecciona la raza de perro que quieras añadir 
-        <select value={breed} onChange={handleBreedChange} className='breed-selection'>
-          {allBreeds.map(breed => {
-            return 
-            <option>
-
-            </option>
-          })}
-        </select>
+        <input placeholder='Nombre del perrico' value={name} onChange={handleNameChange}/>
+        <div className='breed-picker'>
+          Selecciona la raza de perro que quieras añadir 
+          <select value={breed} onChange={handleBreedChange} className='breed-selection'>
+          {allBreeds.map((breed) => (
+            <option value={breed}>{breed}</option>
+          ))}
+          </select>
+        </div>
       </div>
       <button id="add-1-perrico" onClick={(handleAddDogClick)}>Añadir 1 perrico al final</button>
       <button id="add-1-perrico-start">Añadir 1 perrico al principio</button>
